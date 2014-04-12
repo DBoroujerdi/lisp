@@ -16,7 +16,7 @@ func main() {
 
 		if err != nil {
 
-			fmt.Printf(err.String())
+			fmt.Printf(err.Error())
 			break
 		}
 
