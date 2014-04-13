@@ -4,6 +4,7 @@ import "fmt"
 import "bufio"
 import "os"
 import "unicode/utf8"
+import "errors"
 
 func main() {
 	fmt.Printf("GoLisp Version 0.1\n")
@@ -58,29 +59,29 @@ type Operand interface {
 
 type Add struct{}
 
-func (o *Add) apply(exprs ...Expression) float64 {
+func (o *Add) apply(exprs ...Expression) (float64, error) {
 	var r float64
 	for _, e := range exprs {
 		r += e.eval()
 	}
-	return r
+	return r, nil
 }
 
 type Mult struct{}
 
-func (o *Mult) apply(exprs ...Expression) float64 {
+func (o *Mult) apply(exprs ...Expression) (float64, error) {
 	var r float64
 	for _, e := range exprs {
 		r *= e.eval()
 	}
-	return r
+	return r, nil
 }
 
 type Div struct{}
 
-func (o *Div) apply(exprs ...Expression) float64 {
+func (o *Div) apply(exprs ...Expression) (float64, error) {
 	if len(exprs) < 2 {
-		return 0 //, errors.new("Div operand requires more than 1 expression")
+		return 0, errors.New("Div operand requires more than 1 expression")
 	}
 	first := exprs[0]
 	r := first.eval()
@@ -89,26 +90,22 @@ func (o *Div) apply(exprs ...Expression) float64 {
 		er := e.eval()
 		r = r / er
 	}
-	return r
+	return r, nil
 }
 
 type Sub struct{}
 
-func (o *Sub) apply(exprs ...Expression) float64 {
+func (o *Sub) apply(exprs ...Expression) (float64, error) {
 	var r float64
 	for _, e := range exprs {
 		r *= e.eval()
 	}
-	return r
+	return r, nil
 }
 
-func parse(input string) Expression {
-
-	sub := func(strExpr string) bool {
-		return false
-	}
-
-	inner := func(str string) int {
+func parse(input string) (Expression, error) {
+	fmt.Printf("Attempting to parse input [%s]", input)
+	findInner := func(str string) int {
 		index := 0
 		for len(str) > 0 {
 			r, size := utf8.DecodeRuneInString(str)
@@ -123,7 +120,7 @@ func parse(input string) Expression {
 		return -1
 	}
 
-	outer := func(str string) int {
+	findOuter := func(str string) int {
 		index := len(str)
 		for len(str) > 0 {
 			r, size := utf8.DecodeLastRuneInString(str)
@@ -138,16 +135,28 @@ func parse(input string) Expression {
 		return -1
 	}
 
-	b := []byte(input)
-
-	for len(b) > 0 {
-		r, size := utf8.DecodeRune(b)
-		fmt.Printf("%c\n", r)
-
-		b = b[size:]
+	sub := func(strExpr string) (int, int, bool) {
+		var inner = findInner(strExpr)
+		var outer = findOuter(strExpr)
+		return inner, outer, true
 	}
 
-	return nil
+	inner, outer, contains := sub(input)
+
+	var expr Expression
+
+	if contains {
+		expr = new(Complex)
+		fmt.Printf("Inner %d outer %d\n", inner, outer)
+		subExp := input[inner:outer]
+		fmt.Printf("Sub expression found [%s]", subExp)
+		return parse(subExp)
+	} else {
+		expr = new(Number)
+
+	}
+
+	return expr, err
 }
 
 func evaluate(expr Expression) float64 {
