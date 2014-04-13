@@ -156,7 +156,7 @@ func parse(input string) (Expression, error) {
 
 	}
 
-	return expr, err
+	return expr, nil
 }
 
 func evaluate(expr Expression) float64 {
