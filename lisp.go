@@ -5,6 +5,7 @@ import "bufio"
 import "os"
 import "unicode/utf8"
 import "errors"
+import "github.com/dboroujerdi/stack"
 
 func main() {
 	fmt.Printf("GoLisp Version 0.1\n")
@@ -104,59 +105,26 @@ func (o *Sub) apply(exprs ...Expression) (float64, error) {
 }
 
 func parse(input string) (Expression, error) {
-	fmt.Printf("Attempting to parse input [%s]", input)
-	findInner := func(str string) int {
-		index := 0
-		for len(str) > 0 {
-			r, size := utf8.DecodeRuneInString(str)
 
-			if r == '(' {
-				return index
-			}
+	var str = input
+	s := new(stack.Stack)
 
-			str = str[size:]
-			index++
+	for len(str) > 0 {
+		r, size := utf8.DecodeRuneInString(str)
+
+		if r != '\n' {
+			fmt.Printf("%c\n", r)
 		}
-		return -1
-	}
 
-	findOuter := func(str string) int {
-		index := len(str)
-		for len(str) > 0 {
-			r, size := utf8.DecodeLastRuneInString(str)
-
-			if r == ')' {
-				return index
-			}
-
-			str = str[:len(str)-size]
-			index--
+		if r == ')' || r == '(' {
+			s.Push(r)
 		}
-		return -1
+		str = str[size:]
 	}
 
-	sub := func(strExpr string) (int, int, bool) {
-		var inner = findInner(strExpr)
-		var outer = findOuter(strExpr)
-		return inner, outer, true
-	}
+	fmt.Printf("Size of stack is %d\n", s.Size())
 
-	inner, outer, contains := sub(input)
-
-	var expr Expression
-
-	if contains {
-		expr = new(Complex)
-		fmt.Printf("Inner %d outer %d\n", inner, outer)
-		subExp := input[inner:outer]
-		fmt.Printf("Sub expression found [%s]", subExp)
-		return parse(subExp)
-	} else {
-		expr = new(Number)
-
-	}
-
-	return expr, nil
+	return nil, nil
 }
 
 func evaluate(expr Expression) float64 {
