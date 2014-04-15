@@ -129,6 +129,8 @@ func parse(input string) (Expression, error) {
 			if p != '(' {
 				break
 			}
+		} else if r >= '0' && r <= '9' {
+			fmt.Printf("rune digit found! %c\n", r)
 		}
 		str = str[size:]
 	}
