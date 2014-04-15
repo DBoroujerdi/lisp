@@ -116,13 +116,22 @@ func parse(input string) (Expression, error) {
 			fmt.Printf("%c\n", r)
 		}
 
-		if r == ')' || r == '(' {
+		if r == '(' {
 			s.Push(r)
+
+		} else if r == ')' {
+			p, err := s.Pop()
+
+			if err != nil {
+				break
+			}
+
+			if p != '(' {
+				break
+			}
 		}
 		str = str[size:]
 	}
-
-	fmt.Printf("Size of stack is %d\n", s.Size())
 
 	return nil, nil
 }
