@@ -28,7 +28,11 @@ func main() {
 		}
 
 		if len(input) > 1 {
-			parse(input)
+			if !isValid(input) {
+				fmt.Printf("Lisp is invalid!\n")
+			} else {
+				parse(input)
+			}
 		}
 	}
 }
@@ -104,7 +108,11 @@ func (o *Sub) apply(exprs ...Expression) (float64, error) {
 	return r, nil
 }
 
-func parse(input string) (Expression, error) {
+// TODO expand to also return reason
+// reason will be nil when bool is true
+// !nil when bool is false
+// reason will contain message detailing reasons for being invalid
+func isValid(input string) bool {
 
 	var str = input
 	s := new(stack.Stack)
@@ -112,8 +120,41 @@ func parse(input string) (Expression, error) {
 	for len(str) > 0 {
 		r, size := utf8.DecodeRuneInString(str)
 
+		if r == '(' {
+			s.Push(r)
+
+		} else if r == ')' {
+			_, err := s.Pop()
+
+			if err != nil {
+				return false
+			}
+		}
+		str = str[size:]
+	}
+
+	if !s.IsEmpty() {
+		return false
+	}
+	return true
+}
+
+func parse(input string) (Expression, error) {
+
+	var str = input
+	s := new(stack.Stack)
+	index := 0
+
+	for len(str) > 0 {
+		r, size := utf8.DecodeRuneInString(str)
+
 		if r != '\n' {
 			fmt.Printf("%c\n", r)
+		}
+
+		if index == 1 {
+			// char at index 1 must be 'command'
+
 		}
 
 		if r == '(' {
@@ -133,6 +174,8 @@ func parse(input string) (Expression, error) {
 			fmt.Printf("rune digit found! %c\n", r)
 		}
 		str = str[size:]
+
+		index++
 	}
 
 	return nil, nil
