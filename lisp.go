@@ -3,8 +3,6 @@ package main
 import "fmt"
 import "bufio"
 import "os"
-import "unicode/utf8"
-import "github.com/dboroujerdi/stack"
 
 func main() {
 	fmt.Printf("GoLisp Version 0.1\n")
@@ -34,32 +32,4 @@ func main() {
 			}
 		}
 	}
-}
-
-// TODO remove??
-func isValid(input string) bool {
-
-	var str = input
-	s := new(stack.Stack)
-
-	for len(str) > 0 {
-		r, size := utf8.DecodeRuneInString(str)
-
-		if r == '(' {
-			s.Push(r)
-
-		} else if r == ')' {
-			_, err := s.Pop()
-
-			if err != nil {
-				return false
-			}
-		}
-		str = str[size:]
-	}
-
-	if !s.IsEmpty() {
-		return false
-	}
-	return true
 }
