@@ -78,6 +78,10 @@ func isNum(r rune) bool {
 	return r >= '0' && r <= '9'
 }
 
+func isSpecial(r rune) bool {
+	return r == '#'
+}
+
 func parseSymbol(s string) (string, int) {
 	var str = s
 	var res bytes.Buffer
@@ -152,10 +156,19 @@ func parseR(expr *Expression, input string) (int, error) {
 			elem := Element{nil, EXP, subExpr}
 			expr.Add(elem)
 			str = str[s:]
-		} else if isLetter(r) {
+		} else if isLetter(r) || isSpecial(r) {
 
 			sym, s := parseSymbol(str)
-			elem := Element{nil, SYM, sym}
+
+			var elem Element
+			if sym == "#t" {
+				elem = Element{nil, SYM, "true"}
+			} else if sym == "#f" {
+				elem = Element{nil, SYM, "false"}
+			} else {
+				elem = Element{nil, SYM, sym}
+			}
+
 			expr.elems.PushBack(&elem)
 			str = str[s:]
 		} else {

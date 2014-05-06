@@ -85,15 +85,17 @@ func TestParseSingleSymbol(t *testing.T) {
 	}
 }
 
-// TODO
-// func TestParseBoolean(t *testing.T) {
+func TestParseBoolean(t *testing.T) {
 
-// 	tru, _ := parse("#t")
+	result, _ := parse("(#t)")
 
-// 	if tru != true {
-// 		t.Error("Result should be \"true\" but was")
-// 	}
-// }
+	elem := result.elems.Front()
+	val := elem.Value.(*Element).String()
+
+	if val != "true" {
+		t.Error("Result should be \"true\" but was")
+	}
+}
 
 func TestParse_1(t *testing.T) {
 
