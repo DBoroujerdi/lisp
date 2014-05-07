@@ -1,7 +1,6 @@
 package main
 
 import "testing"
-import "container/list"
 
 func TestParseSymbol(t *testing.T) {
 
@@ -13,7 +12,7 @@ func TestParseSymbol(t *testing.T) {
 }
 
 func TestElementString(t *testing.T) {
-	var elem = Element{nil, SYM, "foo"}
+	var elem = Element{SYM, "foo"}
 
 	val := elem.String()
 
@@ -29,19 +28,18 @@ func TestElementString(t *testing.T) {
 }
 
 func TestExpression(t *testing.T) {
-	var elems list.List
-	var expr = Expression{&elems}
 
-	var elem = Element{nil, SYM, "foo"}
+	var expr = new(Expression)
+
+	var elem = Element{SYM, "foo"}
 	expr.Add(elem)
 
-	l := expr.Len()
-
+	l := len(expr.elems)
 	if l != 1 {
 		t.Error("length was", l)
 	}
 
-	e := expr.elems.Front().Value.(*Element)
+	e := expr.elems[0]
 
 	if e == nil {
 		t.Error("element was nil")
@@ -56,29 +54,27 @@ func TestParseSingleSymbol(t *testing.T) {
 		t.Error(err)
 	}
 
-	len := result.elems.Len()
+	len := len(result.elems)
 	if len != 3 {
 		t.Error("Num Elements expression was", len)
 	}
 
-	elem_1 := result.elems.Front()
-	sym_1 := elem_1.Value.(*Element).String()
+	elem_1 := result.elems[0]
+	sym_1 := elem_1.String()
 
 	if sym_1 != "foo" {
 		t.Error("Result should be \"foo\" but was", sym_1)
 	}
 
-	result.elems.Remove(elem_1)
-	elem_2 := result.elems.Front()
-	sym_2 := elem_2.Value.(*Element).String()
+	elem_2 := result.elems[1]
+	sym_2 := elem_2.String()
 
 	if sym_2 != "bar" {
 		t.Error("Result should be \"bar\" but was", sym_2)
 	}
 
-	result.elems.Remove(elem_2)
-	elem_3 := result.elems.Front()
-	sym_3 := elem_3.Value.(*Element).String()
+	elem_3 := result.elems[2]
+	sym_3 := elem_3.String()
 
 	if sym_3 != "baz" {
 		t.Error("Result should be \"baz\" but was", sym_3)
@@ -89,8 +85,8 @@ func TestParseBoolean(t *testing.T) {
 
 	result, _ := parse("(#t)")
 
-	elem := result.elems.Front()
-	val := elem.Value.(*Element).String()
+	elem := result.elems[0]
+	val := elem.String()
 
 	if val != "true" {
 		t.Error("Result should be \"true\" but was")

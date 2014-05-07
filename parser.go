@@ -4,27 +4,25 @@ import "unicode/utf8"
 import "github.com/dboroujerdi/stack"
 import "errors"
 import "bytes"
-import "container/list"
 import "fmt"
 
 // =====================================================
 
 type Expression struct {
-	elems *list.List
+	elems []*Element
 }
 
 func (expr *Expression) Len() int {
-	return expr.elems.Len()
+	return len(expr.elems)
 }
 
 func (expr *Expression) Add(e Element) {
-	expr.elems.PushBack(&e)
+	expr.elems = append(expr.elems, &e)
 }
 
 type Element struct {
-	elem *Element
-	typ  ElementType
-	val  interface{}
+	typ ElementType
+	val interface{}
 }
 
 func (e *Element) String() string {
@@ -52,20 +50,19 @@ type Symbol struct {
 // =====================================================
 
 func parse(input string) (*Expression, error) {
-	var elems list.List
-	var expr = Expression{&elems}
+	var expr = new(Expression)
 
 	if !isValid(input[0:]) {
 		return nil, errors.New("Invalid Parenthesis!")
 	}
 
-	_, err := parseR(&expr, input[1:])
+	_, err := parseR(expr, input[1:])
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &expr, nil
+	return expr, nil
 }
 
 func isLetter(r rune) bool {
@@ -145,15 +142,14 @@ func parseR(expr *Expression, input string) (int, error) {
 			break
 		} else if r == '(' {
 
-			var elems list.List
-			var subExpr = Expression{&elems}
-			s, err := parseR(&subExpr, str[0:])
+			var subExpr = new(Expression)
+			s, err := parseR(subExpr, str[0:])
 
 			if err != nil {
 				return -1, err
 			}
 
-			elem := Element{nil, EXP, subExpr}
+			elem := Element{EXP, subExpr}
 			expr.Add(elem)
 			str = str[s:]
 		} else if isLetter(r) || isSpecial(r) {
@@ -162,14 +158,14 @@ func parseR(expr *Expression, input string) (int, error) {
 
 			var elem Element
 			if sym == "#t" {
-				elem = Element{nil, SYM, "true"}
+				elem = Element{SYM, "true"}
 			} else if sym == "#f" {
-				elem = Element{nil, SYM, "false"}
+				elem = Element{SYM, "false"}
 			} else {
-				elem = Element{nil, SYM, sym}
+				elem = Element{SYM, sym}
 			}
 
-			expr.elems.PushBack(&elem)
+			expr.Add(elem)
 			str = str[s:]
 		} else {
 			str = str[size:]
