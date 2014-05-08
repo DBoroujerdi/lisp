@@ -11,8 +11,8 @@ func TestParseSymbol(t *testing.T) {
 	}
 }
 
-func TestElementString(t *testing.T) {
-	var elem = Element{SYM, "foo"}
+func TestTokenString(t *testing.T) {
+	var elem = Token{SYM, "foo"}
 
 	val := elem.String()
 
@@ -31,7 +31,7 @@ func TestExpression(t *testing.T) {
 
 	var expr = new(Expression)
 
-	var elem = Element{SYM, "foo"}
+	var elem = Token{SYM, "foo"}
 	expr.Add(elem)
 
 	l := len(expr.elems)
@@ -56,7 +56,7 @@ func TestParseSingleSymbol(t *testing.T) {
 
 	len := len(result.elems)
 	if len != 3 {
-		t.Error("Num Elements expression was", len)
+		t.Error("Num Tokens expression was", len)
 	}
 
 	elem_1 := result.elems[0]

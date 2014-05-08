@@ -9,23 +9,23 @@ import "fmt"
 // =====================================================
 
 type Expression struct {
-	elems []*Element
+	elems []*Token
 }
 
 func (expr *Expression) Len() int {
 	return len(expr.elems)
 }
 
-func (expr *Expression) Add(e Element) {
+func (expr *Expression) Add(e Token) {
 	expr.elems = append(expr.elems, &e)
 }
 
-type Element struct {
-	typ ElementType
+type Token struct {
+	typ TokenType
 	val interface{}
 }
 
-func (e *Element) String() string {
+func (e *Token) String() string {
 	switch e.typ {
 	case EXP:
 		return "Not implemented yet"
@@ -36,10 +36,10 @@ func (e *Element) String() string {
 	}
 }
 
-type ElementType int
+type TokenType int
 
 const (
-	EXP ElementType = iota
+	EXP TokenType = iota
 	SYM
 )
 
@@ -149,20 +149,20 @@ func parseR(expr *Expression, input string) (int, error) {
 				return -1, err
 			}
 
-			elem := Element{EXP, subExpr}
+			elem := Token{EXP, subExpr}
 			expr.Add(elem)
 			str = str[s:]
 		} else if isLetter(r) || isSpecial(r) {
 
 			sym, s := parseSymbol(str)
 
-			var elem Element
+			var elem Token
 			if sym == "#t" {
-				elem = Element{SYM, "true"}
+				elem = Token{SYM, "true"}
 			} else if sym == "#f" {
-				elem = Element{SYM, "false"}
+				elem = Token{SYM, "false"}
 			} else {
-				elem = Element{SYM, sym}
+				elem = Token{SYM, sym}
 			}
 
 			expr.Add(elem)
