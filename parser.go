@@ -12,6 +12,28 @@ type Expression struct {
 	elems []*Token
 }
 
+func (expr *Expression) Pretty() string {
+	p := "("
+
+	for i := range expr.elems {
+		t := expr.elems[i]
+
+		switch t.typ {
+		case EXP:
+			p = p + t.val.(*Expression).Pretty()
+			break
+		case SYM:
+			p = p + fmt.Sprintf("%v", t.val) + " "
+			break
+		default:
+			p = p + "nil"
+		}
+	}
+
+	p = p + ")"
+	return p
+}
+
 func (expr *Expression) Len() int {
 	return len(expr.elems)
 }
@@ -129,6 +151,7 @@ func isValid(input string) bool {
 }
 
 func parseR(expr *Expression, input string) (int, error) {
+	fmt.Printf("Parsing expression [%s]\n", input)
 	var str = input
 	index := 0
 
@@ -142,8 +165,10 @@ func parseR(expr *Expression, input string) (int, error) {
 			break
 		} else if r == '(' {
 
+			b := index + 1
+			fmt.Printf("'(' found at index %d in string %s \n", b, str)
 			var subExpr = new(Expression)
-			s, err := parseR(subExpr, str[0:])
+			s, err := parseR(subExpr, str[1:])
 
 			if err != nil {
 				return -1, err
@@ -152,6 +177,7 @@ func parseR(expr *Expression, input string) (int, error) {
 			elem := Token{EXP, subExpr}
 			expr.Add(elem)
 			str = str[s:]
+			index = index + s
 		} else if isLetter(r) || isSpecial(r) {
 
 			sym, s := parseSymbol(str)
@@ -167,6 +193,7 @@ func parseR(expr *Expression, input string) (int, error) {
 
 			expr.Add(elem)
 			str = str[s:]
+			index = index + s
 		} else {
 			str = str[size:]
 		}

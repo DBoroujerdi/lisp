@@ -1,6 +1,7 @@
 package main
 
 import "testing"
+import "fmt"
 
 func TestParseSymbol(t *testing.T) {
 
@@ -79,6 +80,46 @@ func TestParseSingleSymbol(t *testing.T) {
 	if sym_3 != "baz" {
 		t.Error("Result should be \"baz\" but was", sym_3)
 	}
+}
+
+func TestParseExpressionWithSubExpression(t *testing.T) {
+	fmt.Printf("\nRunning test TestParseExpressionWithSubExpression\n")
+
+	result, err := parse("(foo (bar baz))")
+
+	fmt.Printf("Pretty printed: " + result.Pretty() + "\n")
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	len := result.Len()
+	ex := 2
+	if len != ex {
+		t.Error(fmt.Sprintf("Num Tokens expected [%d] expression was [%d]", ex, len))
+	}
+
+	foo := result.elems[0].val
+	if foo != "foo" {
+		t.Error(fmt.Sprintf("Token expected to be [foo] but was %s", foo))
+	}
+
+	subExprToken := result.elems[1]
+	if subExprToken.typ != 0 {
+		t.Error(fmt.Sprintf("Token expected to be of TokenType EXP but was %s", subExprToken.typ))
+	}
+
+	subExpr, ok := subExprToken.val.(*Expression)
+	if !ok {
+		t.Error("Unable to convert type")
+	}
+
+	fmt.Printf(subExpr.elems[0].val.(string) + "\n")
+	fmt.Printf(subExpr.elems[1].val.(string) + "\n")
+	l := subExpr.Len()
+	fmt.Printf("%d\n", l)
+
+	fmt.Printf("\n")
 }
 
 func TestParseBoolean(t *testing.T) {
