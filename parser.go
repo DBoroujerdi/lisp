@@ -9,14 +9,14 @@ import "fmt"
 // =====================================================
 
 type Expression struct {
-	elems []*Token
+	tkns []*Token
 }
 
 func (expr *Expression) Pretty() string {
 	p := "("
 
-	for i := range expr.elems {
-		t := expr.elems[i]
+	for i := range expr.tkns {
+		t := expr.tkns[i]
 
 		switch t.typ {
 		case EXP:
@@ -35,11 +35,11 @@ func (expr *Expression) Pretty() string {
 }
 
 func (expr *Expression) Len() int {
-	return len(expr.elems)
+	return len(expr.tkns)
 }
 
 func (expr *Expression) Add(e Token) {
-	expr.elems = append(expr.elems, &e)
+	expr.tkns = append(expr.tkns, &e)
 }
 
 type Token struct {

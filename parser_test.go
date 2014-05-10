@@ -35,12 +35,12 @@ func TestExpression(t *testing.T) {
 	var elem = Token{SYM, "foo"}
 	expr.Add(elem)
 
-	l := len(expr.elems)
+	l := len(expr.tkns)
 	if l != 1 {
 		t.Error("length was", l)
 	}
 
-	e := expr.elems[0]
+	e := expr.tkns[0]
 
 	if e == nil {
 		t.Error("element was nil")
@@ -55,26 +55,26 @@ func TestParseSingleSymbol(t *testing.T) {
 		t.Error(err)
 	}
 
-	len := len(result.elems)
+	len := len(result.tkns)
 	if len != 3 {
 		t.Error("Num Tokens expression was", len)
 	}
 
-	elem_1 := result.elems[0]
+	elem_1 := result.tkns[0]
 	sym_1 := elem_1.String()
 
 	if sym_1 != "foo" {
 		t.Error("Result should be \"foo\" but was", sym_1)
 	}
 
-	elem_2 := result.elems[1]
+	elem_2 := result.tkns[1]
 	sym_2 := elem_2.String()
 
 	if sym_2 != "bar" {
 		t.Error("Result should be \"bar\" but was", sym_2)
 	}
 
-	elem_3 := result.elems[2]
+	elem_3 := result.tkns[2]
 	sym_3 := elem_3.String()
 
 	if sym_3 != "baz" {
@@ -99,12 +99,12 @@ func TestParseExpressionWithSubExpression(t *testing.T) {
 		t.Error(fmt.Sprintf("Num Tokens expected [%d] expression was [%d]", ex, len))
 	}
 
-	foo := result.elems[0].val
+	foo := result.tkns[0].val
 	if foo != "foo" {
 		t.Error(fmt.Sprintf("Token expected to be [foo] but was %s", foo))
 	}
 
-	subExprToken := result.elems[1]
+	subExprToken := result.tkns[1]
 	if subExprToken.typ != 0 {
 		t.Error(fmt.Sprintf("Token expected to be of TokenType EXP but was %s", subExprToken.typ))
 	}
@@ -114,8 +114,8 @@ func TestParseExpressionWithSubExpression(t *testing.T) {
 		t.Error("Unable to convert type")
 	}
 
-	fmt.Printf(subExpr.elems[0].val.(string) + "\n")
-	fmt.Printf(subExpr.elems[1].val.(string) + "\n")
+	fmt.Printf(subExpr.tkns[0].val.(string) + "\n")
+	fmt.Printf(subExpr.tkns[1].val.(string) + "\n")
 	l := subExpr.Len()
 	fmt.Printf("%d\n", l)
 
@@ -126,7 +126,7 @@ func TestParseBoolean(t *testing.T) {
 
 	result, _ := parse("(#t)")
 
-	elem := result.elems[0]
+	elem := result.tkns[0]
 	val := elem.String()
 
 	if val != "true" {
