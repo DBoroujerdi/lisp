@@ -151,7 +151,6 @@ func isValid(input string) bool {
 }
 
 func parseR(expr *Expression, input string) (int, error) {
-	fmt.Printf("Parsing expression [%s]\n", input)
 	var str = input
 	index := 0
 
@@ -165,8 +164,6 @@ func parseR(expr *Expression, input string) (int, error) {
 			break
 		} else if r == '(' {
 
-			b := index + 1
-			fmt.Printf("'(' found at index %d in string %s \n", b, str)
 			var subExpr = new(Expression)
 			s, err := parseR(subExpr, str[1:])
 
