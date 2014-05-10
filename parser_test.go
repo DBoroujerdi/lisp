@@ -122,18 +122,6 @@ func TestParseExpressionWithSubExpression(t *testing.T) {
 	fmt.Printf("\n")
 }
 
-func TestParseBoolean(t *testing.T) {
-
-	result, _ := parse("(#t)")
-
-	elem := result.tkns[0]
-	val := elem.String()
-
-	if val != "true" {
-		t.Error("Result should be \"true\" but was")
-	}
-}
-
 func TestParse_1(t *testing.T) {
 
 	input := "(+ 5 5)"

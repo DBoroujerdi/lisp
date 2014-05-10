@@ -182,14 +182,7 @@ func parseR(expr *Expression, input string) (int, error) {
 
 			sym, s := parseSymbol(str)
 
-			var elem Token
-			if sym == "#t" {
-				elem = Token{SYM, "true"}
-			} else if sym == "#f" {
-				elem = Token{SYM, "false"}
-			} else {
-				elem = Token{SYM, sym}
-			}
+			var elem = Token{SYM, sym}
 
 			expr.Add(elem)
 			str = str[s:]
