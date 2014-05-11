@@ -1,6 +1,9 @@
 golisp
 ======
 
-Implementation of Lisp to learn about Lisp and Go programming languages.
+Implementation of Lisp in Go to learn about Lisp and Go programming languages.
 
-Will be following exercises from http://www.buildyourownlisp.com/ 
+Rererences:
+
+* http://www.buildyourownlisp.com/
+* http://noeffclue.blogspot.ca/2014/05/compiler-part-1-introduction-to-writing.html
