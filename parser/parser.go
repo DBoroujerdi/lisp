@@ -1,4 +1,4 @@
-package main
+package parser
 
 import "unicode/utf8"
 import "github.com/dboroujerdi/stack"
@@ -71,10 +71,10 @@ type Symbol struct {
 
 // =====================================================
 
-func parse(input string) (*Expression, error) {
+func Parse(input string) (*Expression, error) {
 	var expr = new(Expression)
 
-	if !isValid(input[0:]) {
+	if !IsValid(input[0:]) {
 		return nil, errors.New("Invalid Parenthesis!")
 	}
 
@@ -122,7 +122,7 @@ func parseSymbol(s string) (string, int) {
 	return rs, len(rs)
 }
 
-func isValid(input string) bool {
+func IsValid(input string) bool {
 	var str = input
 	s := new(stack.Stack)
 

@@ -3,6 +3,7 @@ package main
 import "fmt"
 import "bufio"
 import "os"
+import "github.com/dboroujerdi/golisp/parser"
 
 func main() {
 	fmt.Printf("GoLisp Version 0.1\n")
@@ -25,10 +26,10 @@ func main() {
 		}
 
 		if len(input) > 1 {
-			if !isValid(input) {
+			if !parser.IsValid(input) {
 				fmt.Printf("Lisp is invalid!\n")
 			} else {
-				parse(input)
+				parser.Parse(input)
 			}
 		}
 	}
