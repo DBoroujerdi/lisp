@@ -3,7 +3,7 @@ package main
 import "fmt"
 import "bufio"
 import "os"
-import "github.com/dboroujerdi/golisp/parser"
+import "github.com/dboroujerdi/lisp/parser"
 
 func main() {
 	fmt.Printf("GoLisp Version 0.1\n")
