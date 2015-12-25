@@ -1,7 +1,7 @@
 package parser
 
 import "unicode/utf8"
-import "github.com/dboroujerdi/stack"
+import "github.com/dboroujerdi/golisp/stack"
 import "errors"
 import "bytes"
 import "fmt"

@@ -1,0 +1,4 @@
+go-stack
+========
+
+LIFO Stack
