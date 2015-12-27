@@ -43,7 +43,6 @@ func NewLexer(input string) *Lexer {
 
 // GetTokens get token
 func (lexer *Lexer) GetTokens() ([]*Token, error) {
-	_ = "breakpoint"
 	var tokens []*Token
 
 	for lexer.inputBytesRemaining() > 0 {
@@ -66,8 +65,6 @@ func (lexer *Lexer) inputBytesRemaining() int64 {
 }
 
 func (lexer *Lexer) nextToken() (*Token, error) {
-	_ = "breakpoint"
-
 	r, size := utf8.DecodeRuneInString(lexer.input)
 	lexer.input = lexer.input[size:]
 
