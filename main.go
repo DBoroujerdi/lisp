@@ -3,7 +3,8 @@ package main
 import "fmt"
 import "bufio"
 import "os"
-import "github.com/dboroujerdi/lisp/parser"
+
+import "github.com/DBoroujerdi/lisp/lang"
 
 func main() {
 	fmt.Printf("GoLisp Version 0.1\n")
@@ -12,7 +13,7 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Printf("GoLisp>")
+		fmt.Printf("GoLisp> ")
 		input, err := reader.ReadString('\n')
 
 		if err != nil {
@@ -26,10 +27,10 @@ func main() {
 		}
 
 		if len(input) > 1 {
-			if !parser.IsValid(input) {
+			if !lisp.IsValid(input) {
 				fmt.Printf("Lisp is invalid!\n")
 			} else {
-				parser.Parse(input)
+				lisp.Parse(input)
 			}
 		}
 	}

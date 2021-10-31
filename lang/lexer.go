@@ -1,4 +1,4 @@
-package lexer
+package lisp
 
 import "unicode/utf8"
 import "fmt"

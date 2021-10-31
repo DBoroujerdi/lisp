@@ -1,7 +1,6 @@
-package parser
+package lisp
 
 import "unicode/utf8"
-import "github.com/dboroujerdi/lisp/stack"
 import "errors"
 import "bytes"
 import "fmt"
@@ -42,11 +41,6 @@ func (expr *Expression) Add(e Token) {
 	expr.tkns = append(expr.tkns, &e)
 }
 
-type Token struct {
-	typ TokenType
-	val interface{}
-}
-
 func (e *Token) String() string {
 	switch e.typ {
 	case EXP:
@@ -57,8 +51,6 @@ func (e *Token) String() string {
 		return "nil"
 	}
 }
-
-type TokenType int
 
 const (
 	EXP TokenType = iota
@@ -124,7 +116,7 @@ func parseSymbol(s string) (string, int) {
 
 func IsValid(input string) bool {
 	var str = input
-	s := new(stack.Stack)
+	s := new(Stack)
 
 	for len(str) > 0 {
 		r, size := utf8.DecodeRuneInString(str)

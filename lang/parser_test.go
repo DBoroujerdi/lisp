@@ -1,4 +1,4 @@
-package parser
+package lisp
 
 import "testing"
 import "fmt"
@@ -49,7 +49,7 @@ func TestExpression(t *testing.T) {
 
 func TestParseSingleSymbol(t *testing.T) {
 
-	result, err := parse("(foo bar baz)")
+	result, err := Parse("(foo bar baz)")
 
 	if err != nil {
 		t.Error(err)
@@ -85,7 +85,7 @@ func TestParseSingleSymbol(t *testing.T) {
 func TestParseExpressionWithSubExpression(t *testing.T) {
 	fmt.Printf("\nRunning test TestParseExpressionWithSubExpression\n")
 
-	result, err := parse("(foo (bar baz))")
+	result, err := Parse("(foo (bar baz))")
 
 	fmt.Printf("Pretty printed: " + result.Pretty() + "\n")
 
@@ -106,7 +106,7 @@ func TestParseExpressionWithSubExpression(t *testing.T) {
 
 	subExprToken := result.tkns[1]
 	if subExprToken.typ != 0 {
-		t.Error(fmt.Sprintf("Token expected to be of TokenType EXP but was %s", subExprToken.typ))
+		t.Error(fmt.Sprintf("Token expected to be of TokenType EXP but was %d", subExprToken.typ))
 	}
 
 	subExpr, ok := subExprToken.val.(*Expression)
@@ -125,14 +125,14 @@ func TestParseExpressionWithSubExpression(t *testing.T) {
 func TestParse_1(t *testing.T) {
 
 	input := "(+ 5 5)"
-	var _, _ = parse(input)
+	var _, _ = Parse(input)
 }
 
 func TestValidParens(t *testing.T) {
 
 	input := "(+ 5 5)"
 
-	valid := isValid(input)
+	valid := IsValid(input)
 
 	if !valid {
 		t.Error("Valid lisp " + input + " should be valid!")
@@ -142,7 +142,7 @@ func TestValidParens(t *testing.T) {
 func TestInvalidParens(t *testing.T) {
 	input := "(+ 5 ((5)"
 
-	valid := isValid(input)
+	valid := IsValid(input)
 
 	if valid {
 		t.Error("Invalid lisp " + input + " should be Invalid!")
